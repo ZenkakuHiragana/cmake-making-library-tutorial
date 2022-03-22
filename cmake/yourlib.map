@@ -1,0 +1,5 @@
+/* Exporting symbol list for GCC */
+{
+    global: yourlib_*;
+    local: *;
+};

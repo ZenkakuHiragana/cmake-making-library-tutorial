@@ -1,0 +1,5 @@
+; Exporting symbol list for MSVC
+EXPORTS
+    yourlib_call_cpp
+    yourlib_test_print
+    yourlib_add

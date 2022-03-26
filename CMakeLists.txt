@@ -64,3 +64,17 @@ if(YOURLIB_BUILD_SHARED)
     set_target_properties(${TARGET_NAME} PROPERTIES
         INSTALL_RPATH $<IF:$<PLATFORM_ID:Linux>,$ORIGIN,@executable_path>)
 endif()
+
+# Windows特有の設定
+# Visual Studioのデバッガ起動時の作業ディレクトリを設定する
+set_target_properties(${TARGET_NAME}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
+    $<TARGET_FILE_DIR:${TARGET_NAME}>)
+# Visual StudioでソースコードをUTF-8で読ませる
+target_compile_options(${TARGET_NAME} PRIVATE
+    $<$<C_COMPILER_ID:MSVC>:/utf-8>
+    $<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
+# セキュリティ強化版関数を使えというおせっかい警告を黙らせる
+target_compile_definitions(${TARGET_NAME} PRIVATE
+    $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>)

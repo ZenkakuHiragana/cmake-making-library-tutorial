@@ -696,8 +696,7 @@ if(${CMAKE_C_COMPILER_ID} STREQUAL MSVC)
     set(DEF_FILE ${PROJECT_SOURCE_DIR}/cmake/${TARGET_NAME}.def)
     set_target_properties(${TARGET_NAME} PROPERTIES
         LINK_FLAGS ${CMAKE_LINK_DEF_FILE_FLAG}"${DEF_FILE}"
-        LINK_DEPENDS "${DEF_FILE}"
-    )
+        LINK_DEPENDS "${DEF_FILE}")
 endif()
 ```
 
@@ -726,8 +725,7 @@ if(${CMAKE_C_COMPILER_ID} STREQUAL GNU)
     set(VERSION_SCRIPT ${PROJECT_SOURCE_DIR}/cmake/${TARGET_NAME}.map)
     set_target_properties(${TARGET_NAME} PROPERTIES
         LINK_FLAGS -Wl,--version-script="${VERSION_SCRIPT}"
-        LINK_DEPENDS "${VERSION_SCRIPT}"
-    )
+        LINK_DEPENDS "${VERSION_SCRIPT}")
 endif()
 ```
 

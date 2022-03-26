@@ -7,11 +7,7 @@ else()
 endif()
 
 # ソースファイルの登録
-target_sources(${TARGET_NAME} PRIVATE
-    source1.c
-    source2.c
-    cpp.cpp
-)
+target_sources(${TARGET_NAME} PRIVATE source1.c source2.c cpp.cpp)
 
 # インクルード検索パスの設定
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -34,8 +30,7 @@ elseif(IS_GNU OR IS_CLANG)
 endif()
 set_target_properties(${TARGET_NAME} PROPERTIES
     LINK_FLAGS ${EXPORT_FLAG}"${EXPORT_LIST}"
-    LINK_DEPENDS "${EXPORT_LIST}"
-)
+    LINK_DEPENDS "${EXPORT_LIST}")
 
 # インストール先の設定
 if(NOT YOURLIB_INSTALL_DIR)
@@ -72,8 +67,7 @@ install(FILES ${FILES_TO_INSTALL} DESTINATION ${YOURLIB_INSTALL_DIR})
 # Visual Studioのデバッガ起動時の作業ディレクトリを設定する
 set_target_properties(${TARGET_NAME}
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
-    $<TARGET_FILE_DIR:${TARGET_NAME}>
-)
+    $<TARGET_FILE_DIR:${TARGET_NAME}>)
 # Visual StudioでソースコードをUTF-8で読ませる
 target_compile_options(${TARGET_NAME} PRIVATE
     $<$<C_COMPILER_ID:MSVC>:/utf-8>

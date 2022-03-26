@@ -550,10 +550,9 @@ install(DIRECTORY ${DIRECTORIES_TO_INSTALL} DESTINATION ${YOURLIB_INSTALL_DIR})
 ```CMake
 set(OUTPUT_DIR ${PROJECT_SOURCE_DIR}/bin/$<CONFIG>) # 出力先
 set_target_properties(${TARGET_NAME} PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR} # 静的ライブラリ用
-    LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR} # 動的ライブラリ用
-    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR} # 実行ファイル用
-)
+    ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}  # 静的ライブラリ用
+    LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}  # 動的ライブラリ用
+    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}) # 実行ファイル用
 ```
 
 **出力先に関わる変数**
@@ -677,8 +676,7 @@ macOSで同じことをする方法が分からず困り果てていたところ
 ```CMake
 set_target_properties(${TARGET_NAME} PROPERTIES
     LINK_FLAGS リンカーに渡すパラメータ
-    LINK_DEPENDS リンク時の依存ファイルの指定
-)
+    LINK_DEPENDS リンク時の依存ファイルの指定)
 ```
 
 ### MSVC
@@ -779,8 +777,7 @@ elseif(IS_GNU OR IS_CLANG)
 endif()
 set_target_properties(${TARGET_NAME} PROPERTIES
     LINK_FLAGS ${EXPORT_FLAG}"${EXPORT_LIST}"
-    LINK_DEPENDS "${EXPORT_LIST}"
-)
+    LINK_DEPENDS "${EXPORT_LIST}")
 ```
 
 **macOSにおける設定**
@@ -837,8 +834,7 @@ CMakeで作成したVisual Studioのプロジェクトでデバッグすると�
 ```CMake
 set_target_properties(${TARGET_NAME}
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
-    $<TARGET_FILE_DIR:${TARGET_NAME}>
-)
+    $<TARGET_FILE_DIR:${TARGET_NAME}>)
 ```
 
 ### BOMなしUTF-8に関する修正
@@ -956,10 +952,7 @@ else()
 endif()
 
 # ソースファイルの登録
-target_sources(${TARGET_NAME} PRIVATE
-    source1.c
-    source2.c
-)
+target_sources(${TARGET_NAME} PRIVATE source1.c source2.c)
 
 # インクルード検索パスの設定
 target_include_directories(${TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -982,8 +975,7 @@ elseif(IS_GNU OR IS_CLANG)
 endif()
 set_target_properties(${TARGET_NAME} PROPERTIES
     LINK_FLAGS ${EXPORT_FLAG}"${EXPORT_LIST}"
-    LINK_DEPENDS "${EXPORT_LIST}"
-)
+    LINK_DEPENDS "${EXPORT_LIST}")
 
 # インストール先の設定
 if(NOT YOURLIB_INSTALL_DIR)
@@ -1020,8 +1012,7 @@ install(FILES ${FILES_TO_INSTALL} DESTINATION ${YOURLIB_INSTALL_DIR})
 # Visual Studioのデバッガ起動時の作業ディレクトリを設定する
 set_target_properties(${TARGET_NAME}
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
-    $<TARGET_FILE_DIR:${TARGET_NAME}>
-)
+    $<TARGET_FILE_DIR:${TARGET_NAME}>)
 # Visual StudioでソースコードをUTF-8で読ませる
 target_compile_options(${TARGET_NAME} PRIVATE
     $<$<C_COMPILER_ID:MSVC>:/utf-8>
@@ -1255,6 +1246,20 @@ if(YOURLIB_BUILD_SHARED)
     set_target_properties(${TARGET_NAME} PROPERTIES
         INSTALL_RPATH $<IF:$<PLATFORM_ID:Linux>,$ORIGIN,@executable_path>)
 endif()
+
+# Windows特有の設定
+# Visual Studioのデバッガ起動時の作業ディレクトリを設定する
+set_target_properties(${TARGET_NAME}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
+    $<TARGET_FILE_DIR:${TARGET_NAME}>)
+# Visual StudioでソースコードをUTF-8で読ませる
+target_compile_options(${TARGET_NAME} PRIVATE
+    $<$<C_COMPILER_ID:MSVC>:/utf-8>
+    $<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
+# セキュリティ強化版関数を使えというおせっかい警告を黙らせる
+target_compile_definitions(${TARGET_NAME} PRIVATE
+    $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>)
 ```
 </details>
 
